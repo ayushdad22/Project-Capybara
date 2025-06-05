@@ -7,4 +7,7 @@ defmodule Capybara.Users do
       |> Map.put(:joined_at, Date.utc_today())
     end)
   end
+  def find_A(users) do
+    Enum.filter(users, fn user -> String.starts_with?(user.name, "A") end)
+  end
 end
