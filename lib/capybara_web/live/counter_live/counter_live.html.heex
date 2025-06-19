@@ -1,0 +1,7 @@
+<div id="counter" class="p-6 border border-gray-300 rounded shadow-md w-fit mx-auto mt-8 text-center" phx-hook="CounterHook">
+  <h1 class="text-2xl font-semibold mb-4">Count: <%= @count %></h1>
+  <div class="space-x-4">
+    <button phx-click="inc" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">+ Increment</button>
+    <button phx-click="dec" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">- Decrement</button>
+  </div>
+</div>

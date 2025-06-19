@@ -1,0 +1,41 @@
+<.header>
+  Listing Examples
+  <:actions>
+    <.link patch={~p"/examples/new"}>
+      <.button>New Counter</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="examples"
+  rows={@streams.examples}
+  row_click={fn {_id, counter} -> JS.navigate(~p"/examples/#{counter}") end}
+>
+  <:col :let={{_id, counter}} label="Count">{counter.count}</:col>
+  <:action :let={{_id, counter}}>
+    <div class="sr-only">
+      <.link navigate={~p"/examples/#{counter}"}>Show</.link>
+    </div>
+    <.link patch={~p"/examples/#{counter}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, counter}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: counter.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="counter-modal" show on_cancel={JS.patch(~p"/examples")}>
+  <.live_component
+    module={CapybaraWeb.CounterLive.FormComponent}
+    id={@counter.id || :new}
+    title={@page_title}
+    action={@live_action}
+    counter={@counter}
+    patch={~p"/examples"}
+  />
+</.modal>

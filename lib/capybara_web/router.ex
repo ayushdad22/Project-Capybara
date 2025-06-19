@@ -1,6 +1,8 @@
 defmodule CapybaraWeb.Router do
   use CapybaraWeb, :router
 
+  import Phoenix.LiveView.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -20,18 +22,15 @@ defmodule CapybaraWeb.Router do
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", CapybaraWeb do
-  #   pipe_through :api
-  # end
+  # 👇 Add your LiveView route under this new scope
+  scope "/a", CapybaraWeb do
+    pipe_through :browser
+
+    live "/counter", CounterLive
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:capybara, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do

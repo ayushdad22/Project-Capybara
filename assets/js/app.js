@@ -14,7 +14,15 @@
 //
 //     import "some-package"
 //
+let Hooks = {}
 
+Hooks.CounterHook = {
+  mounted() {
+    this.el.querySelector("#js-inc").addEventListener("click", () => {
+      this.pushEvent("inc", {})
+    })
+  }
+}
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
