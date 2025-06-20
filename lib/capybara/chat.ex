@@ -53,7 +53,13 @@ defmodule Capybara.Chat do
     )
     |> Repo.all()
   end
-
+  def list_rooms_for_user(%Capybara.Accounts.User{id: user_id}) do
+    Room
+    |> join(:inner, [r], m in Message, on: m.room_id == r.id)
+    |> where([_r, m], m.user_id == ^user_id)
+    |> distinct(true)
+    |> Repo.all()
+  end
   @doc "Gets a message by ID, raises if not found"
   def get_message!(id), do: Repo.get!(Message, id)
 

@@ -1,12 +1,91 @@
-<h2>Room: <%= @room.name %></h2>
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-lg mx-auto bg-white shadow-sm">
+    <!-- Profile Header -->
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-8 text-white">
+      <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold">Profile</h2>
+          <p class="text-blue-100 text-sm"><%= @user.email %></p>
+        </div>
+      </div>
+    </div>
 
-<div id="messages" phx-update="append">
-  <%= for msg <- @messages do %>
-    <p><strong><%= msg.user_id %>:</strong> <%= msg.content %></p>
-  <% end %>
+    <!-- Rooms Section -->
+    <div class="px-6 py-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Your Chat Rooms</h3>
+        <span class="text-sm text-gray-500"><%= length(@rooms) %> rooms</span>
+      </div>
+
+      <%= if Enum.empty?(@rooms) do %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <h4 class="text-lg font-medium text-gray-900 mb-2">No chat rooms yet</h4>
+          <p class="text-gray-500 mb-6">You haven't joined any chat rooms. Create one to get started!</p>
+          
+          <.link 
+            navigate={~p"/rooms/"} 
+            class="inline-flex items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors duration-200 space-x-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            <span>Create Your First Room</span>
+          </.link>
+        </div>
+      <% else %>
+        <!-- Rooms List -->
+        <div class="space-y-3">
+          <%= for room <- @rooms do %>
+            <div class="bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors duration-150">
+              <.link 
+                navigate={~p"/rooms/#{room.id}"} 
+                class="block p-4 text-decoration-none"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 class="font-medium text-gray-900"><%= room.name %></h4>
+                      <p class="text-sm text-gray-500">Tap to open chat</p>
+                    </div>
+                  </div>
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </.link>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Create New Room Button -->
+        <div class="mt-6 pt-6 border-t border-gray-200">
+          <.link 
+            navigate={~p"/rooms/"} 
+            class="flex items-center justify-center w-full py-3 px-4 bg-white border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50 text-gray-600 hover:text-blue-600 font-medium rounded-xl transition-all duration-200 space-x-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            <span>Create New Room</span>
+          </.link>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
-
-<form phx-submit="send_message">
-  <input type="text" name="message[content]" value={@new_message} placeholder="Type a message" autocomplete="off" />
-  <button type="submit">Send</button>
-</form>

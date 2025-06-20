@@ -26,6 +26,7 @@ defmodule CapybaraWeb.Router do
   # end
   scope "/", CapybaraWeb do
     pipe_through [:browser, :require_authenticated_user]
+    live "/", RoomLive
     live "/rooms", RoomsLive, :index
     live "/rooms/:id", ChatRoomLive
   end
