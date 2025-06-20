@@ -1,31 +1,63 @@
-<h1 class="text-xl mb-4">Room: <%= @room.name %></h1>
+<div class="flex flex-col h-screen max-w-md mx-auto bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white border-b border-gray-200 px-4 py-3 shadow-sm">
+    <h1 class="text-lg font-semibold text-gray-900 text-center"><%= @room.name %></h1>
+  </div>
 
-<div id="messages" class="space-y-2 mb-4 max-h-96 overflow-y-scroll border p-2">
-  <%= for msg <- @messages do %>
-    <div class="p-2 border-b">
-      <strong>
-        <%= if msg.user_id == @user.id do %>
-          You
-        <% else %>
-          <%= msg.user.email %>
-        <% end %>
-      </strong>: <%= msg.content %>
-    </div>
-  <% end %>
+  <!-- Messages Container -->
+  <div id="messages" class="flex-1 overflow-y-auto px-4 py-2 space-y-3" phx-hook="ScrollBottom">
+    <%= for msg <- @messages do %>
+      <%= if msg.user_id == @user.id do %>
+        <!-- Your messages (right-aligned, blue) -->
+        <div class="flex justify-end">
+          <div class="max-w-xs lg:max-w-md">
+            <div class="bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-2 shadow-sm">
+              <p class="text-sm"><%= msg.content %></p>
+            </div>
+            <%# <p class="text-xs text-gray-500 mt-1 text-right">You</p> %>
+          </div>
+        </div>
+      <% else %>
+        <!-- Other messages (left-aligned, gray) -->
+        <div class="flex justify-start">
+          <div class="max-w-xs lg:max-w-md">
+            <div class="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-2 shadow-sm">
+              <p class="text-sm text-gray-900"><%= msg.content %></p>
+            </div>
+            
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div id="bottom-marker"></div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="bg-white border-t border-gray-200 px-4 py-3">
+    <form phx-submit="send_message" class="flex items-end space-x-2">
+      <div class="flex-1">
+        <input
+          type="text"
+          name="content"
+          value={@message}
+          placeholder="iMessage"
+          class="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          autocomplete="off"
+        />
+      </div>
+      <button 
+        type="submit" 
+        class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 transition-colors duration-200 flex-shrink-0"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+        </svg>
+      </button>
+    </form>
+
+    <%= if @error do %>
+      <p class="text-red-500 text-sm mt-2 px-2"><%= @error %></p>
+    <% end %>
+  </div>
 </div>
-
-<form phx-submit="send_message">
-  <input
-    type="text"
-    name="content"
-    value={@message}
-    placeholder="Type your message..."
-    class="border p-2 w-full"
-    autocomplete="off"
-  />
-  <button type="submit" class="bg-blue-500 text-white px-4 py-1 mt-2">Send</button>
-</form>
-
-<%= if @error do %>
-  <p class="text-red-600 mt-2"><%= @error %></p>
-<% end %>
