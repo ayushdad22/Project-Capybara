@@ -1,0 +1,31 @@
+<h1 class="text-xl mb-4">Room: <%= @room.name %></h1>
+
+<div id="messages" class="space-y-2 mb-4 max-h-96 overflow-y-scroll border p-2">
+  <%= for msg <- @messages do %>
+    <div class="p-2 border-b">
+      <strong>
+        <%= if msg.user_id == @user.id do %>
+          You
+        <% else %>
+          <%= msg.user.email %>
+        <% end %>
+      </strong>: <%= msg.content %>
+    </div>
+  <% end %>
+</div>
+
+<form phx-submit="send_message">
+  <input
+    type="text"
+    name="content"
+    value={@message}
+    placeholder="Type your message..."
+    class="border p-2 w-full"
+    autocomplete="off"
+  />
+  <button type="submit" class="bg-blue-500 text-white px-4 py-1 mt-2">Send</button>
+</form>
+
+<%= if @error do %>
+  <p class="text-red-600 mt-2"><%= @error %></p>
+<% end %>

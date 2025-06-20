@@ -1,0 +1,12 @@
+<h2>Room: <%= @room.name %></h2>
+
+<div id="messages" phx-update="append">
+  <%= for msg <- @messages do %>
+    <p><strong><%= msg.user_id %>:</strong> <%= msg.content %></p>
+  <% end %>
+</div>
+
+<form phx-submit="send_message">
+  <input type="text" name="message[content]" value={@new_message} placeholder="Type a message" autocomplete="off" />
+  <button type="submit">Send</button>
+</form>
